@@ -5,7 +5,7 @@ import './Header.css';
 
 const Header = ({ user, toggleSidebar, sidebarCollapsed }) => {
   const { logout, refreshSession } = useAuth();
-  const navigate = useNavigate();
+  // const navigate = useNavigate();
   const [showUserMenu, setShowUserMenu] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
   const [showChangePassword, setShowChangePassword] = useState(false);

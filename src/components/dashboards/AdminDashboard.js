@@ -5,19 +5,19 @@ import '../DashboardCards.css';
 
 const AdminDashboard = () => {
   const { stats, loading, error, refreshDashboard } = useDashboard();
-  const [lowStockProducts, setLowStockProducts] = useState([]);
-  const [recentMovements, setRecentMovements] = useState([]);
+  // const [lowStockProducts, setLowStockProducts] = useState([]);
+  // const [recentMovements, setRecentMovements] = useState([]);
 
   useEffect(() => {
     // Fetch additional data
     const fetchAdditionalData = async () => {
       try {
-        const [lowStock, movements] = await Promise.all([
-          dashboardService.getLowStockProducts(10),
-          dashboardService.getRecentMovements(5)
-        ]);
-        setLowStockProducts(lowStock);
-        setRecentMovements(movements);
+        // const [lowStock, movements] = await Promise.all([
+        //   dashboardService.getLowStockProducts(10),
+        //   dashboardService.getRecentMovements(5)
+        // ]);
+        // setLowStockProducts(lowStock);
+        // setRecentMovements(movements);
       } catch (err) {
         console.error('Error fetching additional dashboard data:', err);
       }

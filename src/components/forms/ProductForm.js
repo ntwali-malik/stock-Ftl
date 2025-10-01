@@ -236,10 +236,10 @@ const ProductForm = ({
     onCancel();
   };
 
-  const getCategoryName = (categoryId) => {
-    const category = categories.find(cat => cat._id === categoryId);
-    return category ? category.name : 'Unknown Category';
-  };
+  // const getCategoryName = (categoryId) => {
+  //   const category = categories.find(cat => cat._id === categoryId);
+  //   return category ? category.name : 'Unknown Category';
+  // };
 
   return (
     <div className="product-form-overlay">

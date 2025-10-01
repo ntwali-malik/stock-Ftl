@@ -505,7 +505,7 @@ const Products = () => {
           ) : (
             <div className="products-grid">
               {sortedProducts.map((product) => {
-                const profitData = calculateProfitMargin(product.purchasePrice, product.sellingPrice);
+                // const profitData = calculateProfitMargin(product.purchasePrice, product.sellingPrice);
                 
                 return (
                   <div key={product._id} className="product-card">

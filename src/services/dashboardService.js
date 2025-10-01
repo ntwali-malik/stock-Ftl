@@ -47,12 +47,12 @@ export const dashboardService = {
   getDashboardStats: async () => {
     try {
       // Fetch all data in parallel
-      const [products, categories, clients, stockMovements, stockBalance] = await Promise.allSettled([
+      const [products, categories, clients, stockMovements] = await Promise.allSettled([
         productService.getProducts(),
         categoryService.getCategories(),
         clientService.getClients(),
         stockMovementService.getMovements(),
-        stockMovementService.getStockBalance()
+        // stockMovementService.getStockBalance()
       ]);
 
       // Calculate statistics

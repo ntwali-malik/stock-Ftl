@@ -108,7 +108,7 @@ export const useAuth = () => {
     } finally {
       setLoading(false);
     }
-  }, []);
+  }, [navigate]);
 
   // Register function
   const register = useCallback(async (userData) => {
@@ -152,7 +152,7 @@ export const useAuth = () => {
       setError(null);
       navigate('/login');
     }
-  }, []);
+  }, [navigate]);
 
   // Clear error function
   const clearError = useCallback(() => {

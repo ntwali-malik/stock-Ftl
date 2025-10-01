@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useAuth } from '../../hooks/useAuth';
 import { useNavigate } from 'react-router-dom';
-import { dashboardService } from '../../services/dashboardService';
+// import { dashboardService } from '../../services/dashboardService';
 import { stockMovementService } from '../../services/stockMovementService';
 import { productService } from '../../services/productService';
 import { clientService } from '../../services/clientService';
@@ -279,9 +279,9 @@ const Reports = () => {
     const pageHeight = doc.internal.pageSize.getHeight();
     
     // Colors
-    const primaryColor = [59, 130, 246]; // Blue
-    const secondaryColor = [107, 114, 128]; // Gray
-    const accentColor = [16, 185, 129]; // Green
+    // const primaryColor = [59, 130, 246]; // Blue
+    // const secondaryColor = [107, 114, 128]; // Gray
+    // const accentColor = [16, 185, 129]; // Green
     
     // Add header (now async)
     await addPDFHeader(doc, type, dateRange, pageWidth);
