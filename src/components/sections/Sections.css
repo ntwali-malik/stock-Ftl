@@ -1,0 +1,97 @@
+/* Section Styles */
+.section-container {
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.section-header {
+  margin-bottom: 32px;
+}
+
+.section-header h1 {
+  font-size: 32px;
+  font-weight: 700;
+  color: #1e293b;
+  margin-bottom: 8px;
+}
+
+.section-header p {
+  font-size: 16px;
+  color: #64748b;
+  margin: 0;
+}
+
+.section-content {
+  background: white;
+  border-radius: 16px;
+  border: 1px solid #e2e8f0;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+}
+
+.placeholder-content {
+  padding: 60px 40px;
+  text-align: center;
+  color: #64748b;
+}
+
+.placeholder-icon {
+  font-size: 64px;
+  margin-bottom: 24px;
+  opacity: 0.6;
+}
+
+.placeholder-content h2 {
+  font-size: 24px;
+  font-weight: 600;
+  color: #1e293b;
+  margin-bottom: 16px;
+}
+
+.placeholder-content p {
+  font-size: 16px;
+  margin-bottom: 24px;
+  max-width: 600px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.placeholder-content ul {
+  text-align: left;
+  max-width: 400px;
+  margin: 0 auto;
+  font-size: 14px;
+  line-height: 1.6;
+}
+
+.placeholder-content li {
+  margin-bottom: 8px;
+  padding-left: 8px;
+}
+
+.placeholder-content li::marker {
+  color: #3b82f6;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .section-header h1 {
+    font-size: 24px;
+  }
+  
+  .placeholder-content {
+    padding: 40px 20px;
+  }
+  
+  .placeholder-icon {
+    font-size: 48px;
+  }
+  
+  .placeholder-content h2 {
+    font-size: 20px;
+  }
+  
+  .placeholder-content p {
+    font-size: 14px;
+  }
+}
