@@ -28,11 +28,17 @@ const SignUp = () => {
     e.preventDefault();
     setLocalError('');
     
+    // Mobile debugging
+    console.log('Signup form submitted on mobile:', /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent));
+    console.log('Form data:', formData);
+    console.log('API Base URL:', process.env.REACT_APP_API_URL || 'https://stock-ftl.onrender.com');
+    
     try {
       await register(formData);
       // Registration successful - user will be automatically logged in
       console.log('Registration successful');
     } catch (error) {
+      console.error('Registration error on mobile:', error);
       setLocalError(error.message);
     }
   };
@@ -68,6 +74,10 @@ const SignUp = () => {
                   value={formData.username}
                   onChange={handleChange}
                   required
+                  autoComplete="username"
+                  autoCapitalize="none"
+                  autoCorrect="off"
+                  spellCheck="false"
                 />
                 <div className="input-icon">
                   <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
@@ -88,6 +98,10 @@ const SignUp = () => {
                   value={formData.email}
                   onChange={handleChange}
                   required
+                  autoComplete="email"
+                  autoCapitalize="none"
+                  autoCorrect="off"
+                  spellCheck="false"
                 />
                 <div className="input-icon">
                   <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
@@ -108,6 +122,10 @@ const SignUp = () => {
                   value={formData.password}
                   onChange={handleChange}
                   required
+                  autoComplete="new-password"
+                  autoCapitalize="none"
+                  autoCorrect="off"
+                  spellCheck="false"
                 />
                 <div className="input-icon">
                   <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">

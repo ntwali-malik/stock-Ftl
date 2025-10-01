@@ -5,7 +5,7 @@ import { clientService } from './clientService';
 import { stockMovementService } from './stockMovementService';
 
 // Base API URL
-const API_BASE_URL = process.env.REACT_APP_API_URL || 'http://localhost:5000';
+const API_BASE_URL = process.env.REACT_APP_API_URL || 'https://stock-ftl.onrender.com';
 
 // API request helper
 const apiRequest = async (endpoint, options = {}) => {
