@@ -538,4 +538,30 @@ body {
   .login-title {
     font-size: 1.5rem;
   }
+  
+  /* Mobile-specific input improvements */
+  .input-wrapper input {
+    font-size: 16px; /* Prevents zoom on iOS */
+    -webkit-appearance: none;
+    border-radius: 8px;
+  }
+  
+  .login-button {
+    font-size: 16px; /* Prevents zoom on iOS */
+    -webkit-appearance: none;
+    touch-action: manipulation;
+  }
+  
+  /* Ensure buttons are touch-friendly */
+  .forgot-link {
+    min-height: 44px;
+    min-width: 44px;
+    touch-action: manipulation;
+  }
+  
+  .signup-text {
+    min-height: 44px;
+    min-width: 44px;
+    touch-action: manipulation;
+  }
 }

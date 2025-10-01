@@ -200,7 +200,7 @@ export const authService = {
   },
 
   // Register function
-  register: async (userData) => {
+  register: async function(userData) {
     try {
       console.log('Registering user:', userData);
       
@@ -288,3 +288,4 @@ export default authService;
 
 // Debug: Log available functions
 console.log('AuthService functions:', Object.keys(authService));
+console.log('AuthService version: 2.0 - Register function added');
