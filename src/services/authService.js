@@ -199,6 +199,59 @@ export const authService = {
     }
   },
 
+  // Register function
+  register: async (userData) => {
+    try {
+      console.log('Registering user:', userData);
+      
+      const response = await fetch(`${API_BASE_URL}/api/auth/register`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        credentials: 'include',
+        body: JSON.stringify(userData),
+      });
+
+      console.log('Register response status:', response.status);
+
+      let data;
+      try {
+        data = await response.json();
+        console.log('Register response data:', data);
+      } catch (jsonError) {
+        console.error('Failed to parse JSON response:', jsonError);
+        const textResponse = await response.text();
+        console.error('Raw response text:', textResponse);
+        throw new Error('Invalid response format from server');
+      }
+
+      if (!response.ok) {
+        console.error('Registration failed with status:', response.status);
+        console.error('Error response:', data);
+        
+        // Provide more specific error messages
+        if (response.status === 400) {
+          throw new Error(data.message || data.error || 'Invalid registration data');
+        } else if (response.status === 409) {
+          throw new Error(data.message || data.error || 'User already exists');
+        } else {
+          throw new Error(data.message || data.error || `Registration failed with status ${response.status}`);
+        }
+      }
+
+      // Validate response structure
+      if (!data || !data.message) {
+        throw new Error('Invalid response format from server');
+      }
+
+      return data;
+    } catch (error) {
+      console.error('Registration failed:', error);
+      throw error;
+    }
+  },
+
   // Database logout function
   logout: async () => {
     try {
@@ -232,3 +285,6 @@ export const authService = {
 
 // Export default authService
 export default authService;
+
+// Debug: Log available functions
+console.log('AuthService functions:', Object.keys(authService));
