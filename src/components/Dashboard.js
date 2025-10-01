@@ -14,6 +14,9 @@ const Dashboard = () => {
   // Set appropriate dashboard based on user role
   React.useEffect(() => {
     if (user) {
+      console.log('Dashboard: User object:', user);
+      console.log('Dashboard: User role:', user.role);
+      
       // Automatically set the appropriate dashboard section based on role
       const getDashboardForRole = (role) => {
         switch (role) {
@@ -29,6 +32,7 @@ const Dashboard = () => {
       };
       
       const appropriateSection = getDashboardForRole(user.role);
+      console.log('Dashboard: Setting active section to:', appropriateSection);
       setActiveSection(appropriateSection);
     }
   }, [user]);

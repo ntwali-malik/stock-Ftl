@@ -771,3 +771,66 @@
     grid-template-columns: 1fr;
   }
 }
+
+/* Sold Starlink Product Styles */
+.stock-limit-warning.sold-warning {
+  background: #fee2e2;
+  border-color: #ef4444;
+  color: #dc2626;
+}
+
+/* New Starlink Product Styles */
+.stock-limit-warning.new-warning {
+  background: #dbeafe;
+  border-color: #3b82f6;
+  color: #1e40af;
+}
+
+.stock-disabled-message {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px;
+  background: #f3f4f6;
+  border: 1px solid #d1d5db;
+  border-radius: 6px;
+  font-size: 0.85rem;
+  color: #6b7280;
+  text-align: center;
+  justify-content: center;
+}
+
+.disabled-icon {
+  font-size: 1.1rem;
+  flex-shrink: 0;
+}
+
+.disabled-text {
+  font-weight: 500;
+  line-height: 1.4;
+}
+
+.stock-warning-message {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px;
+  background: #fef3c7;
+  border: 1px solid #f59e0b;
+  border-radius: 6px;
+  font-size: 0.85rem;
+  color: #92400e;
+  text-align: center;
+  justify-content: center;
+  margin-bottom: 8px;
+}
+
+.warning-icon {
+  font-size: 1.1rem;
+  flex-shrink: 0;
+}
+
+.warning-text {
+  font-weight: 500;
+  line-height: 1.4;
+}

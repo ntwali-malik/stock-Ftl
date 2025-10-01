@@ -15,22 +15,39 @@ export const useAuth = () => {
         const loggedInUser = sessionStorage.getItem('logged_in_user');
         if (loggedInUser) {
           const userData = JSON.parse(loggedInUser);
+          console.log('Loading user from sessionStorage:', userData);
+          console.log('User role from sessionStorage:', userData.role);
           
-          // Set user from local storage first
-          setUser(userData);
+          // Validate user data structure before setting
+          if (userData && userData.role && userData.username) {
+            console.log('Valid user data found in sessionStorage');
+            setUser(userData);
+          } else {
+            console.log('Invalid user data in sessionStorage, clearing it');
+            sessionStorage.removeItem('logged_in_user');
+            setUser(null);
+          }
           
           // Try to verify session with backend (but don't fail if it doesn't work)
-          try {
-            const verifiedUser = await authService.verifySession();
-            if (verifiedUser) {
-              // Update user data with fresh data from backend
-              setUser(verifiedUser);
-              sessionStorage.setItem('logged_in_user', JSON.stringify(verifiedUser));
+          // Only verify if we have valid user data
+          if (userData && userData.role && userData.username) {
+            try {
+              const verifiedUser = await authService.verifySession();
+              console.log('Verified user from backend:', verifiedUser);
+              
+              // Only update if we get valid user data with a role
+              if (verifiedUser && verifiedUser.role && verifiedUser.username) {
+                console.log('Updating user with verified data from backend');
+                setUser(verifiedUser);
+                sessionStorage.setItem('logged_in_user', JSON.stringify(verifiedUser));
+              } else {
+                console.log('Backend verification returned invalid user data, keeping local data');
+                // Keep the local user data if backend returns invalid data
+              }
+            } catch (verifyError) {
+              console.log('Session verification failed, using local data:', verifyError.message);
+              // Keep the local user data even if verification fails
             }
-            // If verification fails, keep the local user data
-          } catch (verifyError) {
-            console.log('Session verification failed, using local data:', verifyError.message);
-            // Keep the local user data even if verification fails
           }
         } else {
           setUser(null);
@@ -69,6 +86,10 @@ export const useAuth = () => {
         fullName: response.fullName || response.username,
         email: response.email || null
       };
+      
+      console.log('Backend response:', response);
+      console.log('Extracted userData:', userData);
+      console.log('User role from backend:', response.role);
       
       // Save user data to sessionStorage (session-only)
       sessionStorage.setItem('logged_in_user', JSON.stringify(userData));

@@ -47,10 +47,41 @@ const Products = () => {
   const [serialNumber, setSerialNumber] = useState('');
   const [stockOperation, setStockOperation] = useState('set');
   const [stockQuantity, setStockQuantity] = useState('');
+  const [soldProducts, setSoldProducts] = useState(new Set());
 
   // Fetch products with filters
   const [filteredProducts, setFilteredProducts] = useState([]);
   const [filterLoading, setFilterLoading] = useState(false);
+
+  // Function to check which Starlink products have been sold
+  const checkSoldProducts = async (products) => {
+    const soldSet = new Set();
+    
+    for (const product of products) {
+      const categoryName = product.category?.name || '';
+      const isStarlinkCategory = categoryName === 'Starlink Standard V3' || 
+                                categoryName === 'Starlink Mini Kit' || 
+                                categoryName === 'Starlink Enterprise Kit' ||
+                                categoryName === 'Starlink Ethernet Adapter' ||
+                                categoryName === 'Satrlink Ethernet Adapter';
+      
+      if (isStarlinkCategory && (product.quantity || 0) === 0) {
+        try {
+          const { stockMovementService } = await import('../../services/stockMovementService');
+          const movements = await stockMovementService.getMovements({ product: product._id });
+          const hasSales = movements.some(movement => movement.movementType === 'SALE');
+          
+          if (hasSales) {
+            soldSet.add(product._id);
+          }
+        } catch (error) {
+          console.error('Error checking sales for product:', product._id, error);
+        }
+      }
+    }
+    
+    setSoldProducts(soldSet);
+  };
 
   useEffect(() => {
     const fetchFilteredProducts = async () => {
@@ -71,6 +102,9 @@ const Products = () => {
         }
         
         setFilteredProducts(result);
+        
+        // Check which Starlink products have been sold
+        await checkSoldProducts(result);
       } catch (error) {
         console.error('Error fetching filtered products:', error);
         setFilteredProducts([]);
@@ -268,9 +302,19 @@ const Products = () => {
                                 categoryName === 'Satrlink Ethernet Adapter';
       
       if (isStarlinkCategory) {
+        const currentQuantity = product.quantity || 0;
+        const isOutOfStock = currentQuantity === 0;
+        const isSold = soldProducts.has(productId);
+        
+        // Check if this Starlink product has been sold
+        if (isSold) {
+          alert(`This ${categoryName} product has been sold and cannot be restocked. Each Starlink product is unique and once sold, it cannot be added back to inventory.`);
+          return;
+        }
+        
         // For Starlink categories, check if adding would exceed 1
         if (stockOperation === 'add') {
-          const newQuantity = (product.quantity || 0) + quantity;
+          const newQuantity = currentQuantity + quantity;
           if (newQuantity > 1) {
             alert(`Maximum quantity for ${categoryName} is 1. Cannot add more.`);
             return;
@@ -509,41 +553,68 @@ const Products = () => {
                                                   categoryName === 'Starlink Ethernet Adapter' ||
                                                   categoryName === 'Satrlink Ethernet Adapter';
                         
+                        const currentQuantity = product.quantity || 0;
+                        const isOutOfStock = currentQuantity === 0;
+                        const isSold = soldProducts.has(product._id);
+                        
+                        // For Starlink products, distinguish between new (qty 0, no sales) and sold (qty 0, has sales)
+                        const isSoldStarlink = isStarlinkCategory && isSold;
+                        const isNewStarlink = isStarlinkCategory && isOutOfStock && !isSold;
+                        
                         return (
                           <>
                             {isStarlinkCategory && (
-                              <div className="stock-limit-warning">
-                                <span className="limit-icon">⚠️</span>
-                                <span className="limit-text">Max quantity: 1</span>
+                              <div className={`stock-limit-warning ${isSoldStarlink ? 'sold-warning' : isNewStarlink ? 'new-warning' : ''}`}>
+                                <span className="limit-icon">
+                                  {isSoldStarlink ? '🚫' : isNewStarlink ? '⚠️' : '⚠️'}
+                                </span>
+                                <span className="limit-text">
+                                  {isSoldStarlink ? 'SOLD - No adjustments allowed' : isNewStarlink ? 'New product - Max quantity: 1' : 'Max quantity: 1'}
+                                </span>
                               </div>
                             )}
-                            <div className="stock-input-group">
-                              <select
-                                value={stockOperation}
-                                onChange={(e) => setStockOperation(e.target.value)}
-                                className="stock-operation-select"
-                              >
-                                <option value="set">Set</option>
-                                <option value="add">Add</option>
-                                <option value="subtract">Subtract</option>
-                              </select>
-                              <input
-                                type="number"
-                                placeholder="Qty"
-                                value={stockQuantity}
-                                onChange={(e) => setStockQuantity(e.target.value)}
-                                className="stock-quantity-input"
-                                min="0"
-                                max={isStarlinkCategory ? "1" : undefined}
-                              />
-                              <button
-                                onClick={() => handleStockOperation(product._id)}
-                                className="btn btn-sm btn-secondary"
-                                disabled={!stockQuantity || isNaN(parseFloat(stockQuantity))}
-                              >
-                                Update
-                              </button>
-                            </div>
+                            
+                            {isSoldStarlink ? (
+                              <div className="stock-disabled-message">
+                                <span className="disabled-icon">🔒</span>
+                                <span className="disabled-text">This Starlink product has been sold and cannot be restocked</span>
+                              </div>
+                            ) : isNewStarlink ? (
+                              <div className="stock-warning-message">
+                                <span className="warning-icon">ℹ️</span>
+                                <span className="warning-text">This is a new Starlink product. You can add quantity to make it available.</span>
+                              </div>
+                            ) : null}
+                            
+                            {!isSoldStarlink && (
+                              <div className="stock-input-group">
+                                <select
+                                  value={stockOperation}
+                                  onChange={(e) => setStockOperation(e.target.value)}
+                                  className="stock-operation-select"
+                                >
+                                  <option value="set">Set</option>
+                                  <option value="add">Add</option>
+                                  <option value="subtract">Subtract</option>
+                                </select>
+                                <input
+                                  type="number"
+                                  placeholder="Qty"
+                                  value={stockQuantity}
+                                  onChange={(e) => setStockQuantity(e.target.value)}
+                                  className="stock-quantity-input"
+                                  min="0"
+                                  max={isStarlinkCategory ? "1" : undefined}
+                                />
+                                <button
+                                  onClick={() => handleStockOperation(product._id)}
+                                  className="btn btn-sm btn-secondary"
+                                  disabled={!stockQuantity || isNaN(parseFloat(stockQuantity))}
+                                >
+                                  Update
+                                </button>
+                              </div>
+                            )}
                           </>
                         );
                       })()}

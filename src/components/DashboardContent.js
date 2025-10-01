@@ -10,17 +10,29 @@ import Reports from './sections/Reports';
 import Settings from './sections/Settings';
 
 const DashboardContent = ({ activeSection, userRole }) => {
+  console.log('DashboardContent: activeSection:', activeSection);
+  console.log('DashboardContent: userRole:', userRole);
+  
   const renderContent = () => {
     switch (activeSection) {
       case 'dashboard':
-        switch (userRole) {
+        console.log('DashboardContent: Rendering dashboard for role:', userRole);
+        // Normalize role to lowercase for comparison
+        const normalizedRole = (userRole || '').toLowerCase();
+        console.log('DashboardContent: Normalized role:', normalizedRole);
+        
+        switch (normalizedRole) {
           case 'admin':
+            console.log('DashboardContent: Rendering AdminDashboard');
             return <AdminDashboard />;
           case 'technician':
+            console.log('DashboardContent: Rendering TechnicianDashboard');
             return <TechnicianDashboard />;
           case 'staff':
+            console.log('DashboardContent: Rendering StaffDashboard');
             return <StaffDashboard />;
           default:
+            console.log('DashboardContent: Default case - Rendering StaffDashboard for role:', normalizedRole);
             return <StaffDashboard />;
         }
       case 'products':

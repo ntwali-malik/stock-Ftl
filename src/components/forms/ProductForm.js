@@ -46,19 +46,78 @@ const ProductForm = ({
       }));
     }
 
+    // If category changes and we have a name, re-validate the name
+    if (name === 'category' && formData.name.trim()) {
+      const trimmedName = formData.name.trim();
+      
+      // Get selected category name
+      const selectedCategory = categories.find(cat => cat._id === value);
+      const categoryName = selectedCategory?.name || '';
+      
+      // Check if this is a Starlink category
+      const isStarlinkCategory = categoryName === 'Starlink Standard V3' || 
+                                categoryName === 'Starlink Mini Kit' || 
+                                categoryName === 'Starlink Enterprise Kit' ||
+                                categoryName === 'Starlink Ethernet Adapter' ||
+                                categoryName === 'Satrlink Ethernet Adapter';
+      
+      if (isStarlinkCategory) {
+        // For Starlink products, check for any duplicate name (strict uniqueness)
+        const isDuplicate = existingProducts.some(existingProduct => 
+          existingProduct.name.toLowerCase() === trimmedName.toLowerCase() &&
+          (!product || existingProduct._id !== product._id)
+        );
+        
+        if (isDuplicate) {
+          setFormErrors(prev => ({
+            ...prev,
+            name: `A ${categoryName} product with this name already exists. Each Starlink product must be unique.`
+          }));
+        }
+      }
+    }
+
     // Real-time validation for name field
     if (name === 'name' && value.trim()) {
       const trimmedName = value.trim();
-      const isDuplicate = existingProducts.some(existingProduct => 
-        existingProduct.name.toLowerCase() === trimmedName.toLowerCase() &&
-        (!product || existingProduct._id !== product._id)
-      );
       
-      if (isDuplicate) {
-        setFormErrors(prev => ({
-          ...prev,
-          name: 'A product with this name already exists. Please choose a different name.'
-        }));
+      // Get selected category name
+      const selectedCategory = categories.find(cat => cat._id === formData.category);
+      const categoryName = selectedCategory?.name || '';
+      
+      // Check if this is a Starlink category
+      const isStarlinkCategory = categoryName === 'Starlink Standard V3' || 
+                                categoryName === 'Starlink Mini Kit' || 
+                                categoryName === 'Starlink Enterprise Kit' ||
+                                categoryName === 'Starlink Ethernet Adapter' ||
+                                categoryName === 'Satrlink Ethernet Adapter';
+      
+      if (isStarlinkCategory) {
+        // For Starlink products, check for any duplicate name (strict uniqueness)
+        const isDuplicate = existingProducts.some(existingProduct => 
+          existingProduct.name.toLowerCase() === trimmedName.toLowerCase() &&
+          (!product || existingProduct._id !== product._id)
+        );
+        
+        if (isDuplicate) {
+          setFormErrors(prev => ({
+            ...prev,
+            name: `A ${categoryName} product with this name already exists. Each Starlink product must be unique.`
+          }));
+        }
+      } else {
+        // For non-Starlink products, allow duplicates (existing behavior)
+        const isDuplicate = existingProducts.some(existingProduct => 
+          existingProduct.name.toLowerCase() === trimmedName.toLowerCase() &&
+          (!product || existingProduct._id !== product._id)
+        );
+        
+        if (isDuplicate) {
+          setFormErrors(prev => ({
+            ...prev,
+            name: 'A product with this name already exists. Please choose a different name.'
+          }));
+        }
       }
     }
 
@@ -83,15 +142,39 @@ const ProductForm = ({
     } else if (formData.name.trim().length < 2) {
       errors.name = 'Product name must be at least 2 characters';
     } else {
-      // Check for duplicate names (case-insensitive)
-      const trimmedName = formData.name.trim();
-      const isDuplicate = existingProducts.some(existingProduct => 
-        existingProduct.name.toLowerCase() === trimmedName.toLowerCase() &&
-        (!product || existingProduct._id !== product._id)
-      );
+      // Get selected category name
+      const selectedCategory = categories.find(cat => cat._id === formData.category);
+      const categoryName = selectedCategory?.name || '';
       
-      if (isDuplicate) {
-        errors.name = 'A product with this name already exists. Please choose a different name.';
+      // Check if this is a Starlink category
+      const isStarlinkCategory = categoryName === 'Starlink Standard V3' || 
+                                categoryName === 'Starlink Mini Kit' || 
+                                categoryName === 'Starlink Enterprise Kit' ||
+                                categoryName === 'Starlink Ethernet Adapter' ||
+                                categoryName === 'Satrlink Ethernet Adapter';
+      
+      if (isStarlinkCategory) {
+        // For Starlink products, check for any duplicate name (strict uniqueness)
+        const trimmedName = formData.name.trim();
+        const isDuplicate = existingProducts.some(existingProduct => 
+          existingProduct.name.toLowerCase() === trimmedName.toLowerCase() &&
+          (!product || existingProduct._id !== product._id)
+        );
+        
+        if (isDuplicate) {
+          errors.name = `A ${categoryName} product with this name already exists. Each Starlink product must be unique.`;
+        }
+      } else {
+        // For non-Starlink products, allow duplicates (existing behavior)
+        const trimmedName = formData.name.trim();
+        const isDuplicate = existingProducts.some(existingProduct => 
+          existingProduct.name.toLowerCase() === trimmedName.toLowerCase() &&
+          (!product || existingProduct._id !== product._id)
+        );
+        
+        if (isDuplicate) {
+          errors.name = 'A product with this name already exists. Please choose a different name.';
+        }
       }
     }
 
@@ -221,6 +304,28 @@ const ProductForm = ({
             {formErrors.category && (
               <span className="field-error">{formErrors.category}</span>
             )}
+            {/* Show Starlink uniqueness note */}
+            {(() => {
+              const selectedCategory = categories.find(cat => cat._id === formData.category);
+              const categoryName = selectedCategory?.name || '';
+              const isStarlinkCategory = categoryName === 'Starlink Standard V3' || 
+                                        categoryName === 'Starlink Mini Kit' || 
+                                        categoryName === 'Starlink Enterprise Kit' ||
+                                        categoryName === 'Starlink Ethernet Adapter' ||
+                                        categoryName === 'Satrlink Ethernet Adapter';
+              
+              if (isStarlinkCategory) {
+                return (
+                  <div className="form-info">
+                    <span className="info-icon">ℹ️</span>
+                    <span className="info-text">
+                      Each {categoryName} product must have a unique name. No duplicates allowed.
+                    </span>
+                  </div>
+                );
+              }
+              return null;
+            })()}
           </div>
 
           <div className="form-row">
