@@ -64,27 +64,21 @@ exports.login = async (req, res) => {
   }
 };
 
-// GET CURRENT USER
+// GET CURRENT USER (Now returns all users since no authentication)
 exports.getMe = async (req, res) => {
   try {
-    const user = await User.findById(req.session.userId).select("-password");
-    if (!user) return res.status(404).json({ error: "User not found" });
-    res.json(user);
+    const users = await User.find().select("-password");
+    res.json({ message: "All users (authentication disabled)", users });
   } catch (err) {
     console.error(err);
     res.status(500).json({ error: err.message });
   }
 };
 
-// LOGOUT
+// LOGOUT (Now just returns success message since no authentication)
 exports.logout = async (req, res) => {
   try {
-    req.session.destroy((err) => {
-      if (err) {
-        return res.status(500).json({ error: "Could not log out" });
-      }
-      res.json({ message: "Logout successful" });
-    });
+    res.json({ message: "Logout successful (authentication disabled)" });
   } catch (err) {
     console.error(err);
     res.status(500).json({ error: err.message });
