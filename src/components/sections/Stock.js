@@ -47,6 +47,12 @@ const Stock = () => {
     .filter(movement => {
       if (!movement) return false; // Skip invalid movements
       
+      // Role-based filtering: Technicians only see SALE movements
+      const userRole = user?.role?.toLowerCase();
+      if (userRole === 'technician' && movement.movementType !== 'SALE') {
+        return false;
+      }
+      
       const searchLower = (searchTerm || '').toLowerCase();
       const matchesSearch = 
         movement.product?.name?.toLowerCase().includes(searchLower) ||
@@ -195,7 +201,24 @@ const Stock = () => {
         <div className="header-content">
           <div>
             <h1>Stock Movement Management</h1>
-            <p>Track inventory movements, purchases, and sales.</p>
+            <p>
+              {user?.role?.toLowerCase() === 'technician' 
+                ? 'Track inventory sales and stock dispensing.' 
+                : 'Track inventory movements, purchases, and sales.'
+              }
+            </p>
+            {user?.role?.toLowerCase() === 'technician' && (
+              <div className="role-info">
+                <span className="role-badge">Technician Access</span>
+                <span className="role-description">Sale movements only • No delete permissions</span>
+              </div>
+            )}
+            {user?.role?.toLowerCase() === 'staff' && (
+              <div className="role-info">
+                <span className="role-badge staff-badge">Staff Access</span>
+                <span className="role-description">Full access • No delete permissions</span>
+              </div>
+            )}
           </div>
           <button
             className="btn btn-primary"
@@ -235,8 +258,14 @@ const Stock = () => {
               className="filter-select"
             >
               <option value="">All Types</option>
-              <option value="PURCHASE">Purchases</option>
-              <option value="SALE">Sales</option>
+              {user?.role?.toLowerCase() === 'technician' ? (
+                <option value="SALE">Sales</option>
+              ) : (
+                <>
+                  <option value="PURCHASE">Purchases</option>
+                  <option value="SALE">Sales</option>
+                </>
+              )}
             </select>
             
             <select
@@ -353,13 +382,15 @@ const Stock = () => {
                     >
                       Edit
                     </button>
-                    <button
-                      className="btn btn-sm btn-danger"
-                      onClick={() => handleDeleteClick(movement)}
-                      disabled={loading}
-                    >
-                      Delete
-                    </button>
+                    {user?.role?.toLowerCase() === 'admin' && (
+                      <button
+                        className="btn btn-sm btn-danger"
+                        onClick={() => handleDeleteClick(movement)}
+                        disabled={loading}
+                      >
+                        Delete
+                      </button>
+                    )}
                   </div>
                 </div>
                 );
@@ -404,6 +435,7 @@ const Stock = () => {
           error={error}
           products={products}
           clients={clients}
+          userRole={user?.role}
         />
       )}
 
@@ -417,11 +449,12 @@ const Stock = () => {
           error={error}
           products={products}
           clients={clients}
+          userRole={user?.role}
         />
       )}
 
-      {/* Delete Confirmation Modal */}
-      {deleteConfirm && (
+      {/* Delete Confirmation Modal - Admin Only */}
+      {deleteConfirm && user?.role?.toLowerCase() === 'admin' && (
         <DeleteConfirmation
           isOpen={!!deleteConfirm}
           onConfirm={handleDeleteStockMovement}

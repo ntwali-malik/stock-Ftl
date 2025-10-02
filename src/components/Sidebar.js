@@ -13,7 +13,7 @@ const Sidebar = ({ activeSection, setActiveSection, collapsed, open, userRole = 
       id: 'products',
       label: 'Products',
       icon: '📦',
-      roles: ['admin', 'technician', 'staff']
+      roles: ['admin', 'staff']
     },
     {
       id: 'categories',

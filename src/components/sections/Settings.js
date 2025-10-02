@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useAuth } from '../../hooks/useAuth';
 import { useNavigate } from 'react-router-dom';
+import UserManagement from './UserManagement';
 import './Sections.css';
 import './Settings.css';
 
@@ -25,7 +26,7 @@ const Settings = () => {
   const [generalSettings, setGeneralSettings] = useState({
     companyName: 'Fabritech',
     companyEmail: 'info@fabritech.com',
-    companyPhone: '+250 788 123 456',
+    companyPhone: '+250 788 601 280',
     companyAddress: 'Kigali, Rwanda',
     currency: 'RWF',
     timezone: 'Africa/Kigali',
@@ -188,14 +189,8 @@ const Settings = () => {
           )}
 
           {activeTab === 'users' && (
-            <div className="settings-panel">
-              <h3>User Management</h3>
-              <div className="coming-soon">
-                <div className="coming-soon-icon">👥</div>
-                <h4>User Management</h4>
-                <p>Create, edit, and manage user accounts and permissions.</p>
-                <p><em>This feature will be available in the next update.</em></p>
-              </div>
+            <div className="settings-panel user-management-panel">
+              <UserManagement />
             </div>
           )}
 

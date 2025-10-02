@@ -61,9 +61,17 @@ const Products = () => {
       const categoryName = product.category?.name || '';
       const isStarlinkCategory = categoryName === 'Starlink Standard V3' || 
                                 categoryName === 'Starlink Mini Kit' || 
+                                categoryName === 'Starlink Mini' || 
                                 categoryName === 'Starlink Enterprise Kit' ||
                                 categoryName === 'Starlink Ethernet Adapter' ||
-                                categoryName === 'Satrlink Ethernet Adapter';
+                                categoryName === 'Starlink Ethernet Adapters' ||
+                                categoryName === 'Satrlink Ethernet Adapter' ||
+                                (categoryName.includes('Starlink') && categoryName.includes('Ethernet')) ||
+                                (categoryName.includes('Starlink') && categoryName.includes('Mini')) ||
+                                categoryName.includes('Starlink');
+      
+      // Debug logging
+      console.log('Products - Product:', product.name, 'Category:', categoryName, 'Is Starlink:', isStarlinkCategory);
       
       if (isStarlinkCategory && (product.quantity || 0) === 0) {
         try {
@@ -297,9 +305,14 @@ const Products = () => {
       const categoryName = product.category?.name || '';
       const isStarlinkCategory = categoryName === 'Starlink Standard V3' || 
                                 categoryName === 'Starlink Mini Kit' || 
+                                categoryName === 'Starlink Mini' || 
                                 categoryName === 'Starlink Enterprise Kit' ||
                                 categoryName === 'Starlink Ethernet Adapter' ||
-                                categoryName === 'Satrlink Ethernet Adapter';
+                                categoryName === 'Starlink Ethernet Adapters' ||
+                                categoryName === 'Satrlink Ethernet Adapter' ||
+                                (categoryName.includes('Starlink') && categoryName.includes('Ethernet')) ||
+                                (categoryName.includes('Starlink') && categoryName.includes('Mini')) ||
+                                categoryName.includes('Starlink');
       
       if (isStarlinkCategory) {
         const currentQuantity = product.quantity || 0;
@@ -549,9 +562,17 @@ const Products = () => {
                         const categoryName = getCategoryName(product.category?._id || product.category);
                         const isStarlinkCategory = categoryName === 'Starlink Standard V3' || 
                                                   categoryName === 'Starlink Mini Kit' || 
+                                categoryName === 'Starlink Mini' || 
                                                   categoryName === 'Starlink Enterprise Kit' ||
                                                   categoryName === 'Starlink Ethernet Adapter' ||
-                                                  categoryName === 'Satrlink Ethernet Adapter';
+                                categoryName === 'Starlink Ethernet Adapters' ||
+                                                  categoryName === 'Satrlink Ethernet Adapter' ||
+                                (categoryName.includes('Starlink') && categoryName.includes('Ethernet')) ||
+                                (categoryName.includes('Starlink') && categoryName.includes('Mini')) ||
+                                categoryName.includes('Starlink');
+                        
+                        // Debug logging
+                        console.log('Products - Stock controls - Product:', product.name, 'Category:', categoryName, 'Is Starlink:', isStarlinkCategory);
                         
                         const currentQuantity = product.quantity || 0;
                         const isOutOfStock = currentQuantity === 0;
@@ -680,8 +701,8 @@ const Products = () => {
           )}
         </div>
 
-        {/* Statistics */}
-        {sortedProducts.length > 0 && (
+        {/* Statistics - Hidden for Technicians */}
+        {sortedProducts.length > 0 && user?.role?.toLowerCase() !== 'technician' && (
           <div className="products-stats">
             <div className="stat-item">
               <span className="stat-number">{sortedProducts.length}</span>

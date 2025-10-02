@@ -57,9 +57,14 @@ const ProductForm = ({
       // Check if this is a Starlink category
       const isStarlinkCategory = categoryName === 'Starlink Standard V3' || 
                                 categoryName === 'Starlink Mini Kit' || 
+                                categoryName === 'Starlink Mini' || 
                                 categoryName === 'Starlink Enterprise Kit' ||
                                 categoryName === 'Starlink Ethernet Adapter' ||
-                                categoryName === 'Satrlink Ethernet Adapter';
+                                categoryName === 'Starlink Ethernet Adapters' ||
+                                categoryName === 'Satrlink Ethernet Adapter' ||
+                                (categoryName.includes('Starlink') && categoryName.includes('Ethernet')) ||
+                                (categoryName.includes('Starlink') && categoryName.includes('Mini')) ||
+                                categoryName.includes('Starlink');
       
       if (isStarlinkCategory) {
         // For Starlink products, check for any duplicate name (strict uniqueness)
@@ -88,9 +93,18 @@ const ProductForm = ({
       // Check if this is a Starlink category
       const isStarlinkCategory = categoryName === 'Starlink Standard V3' || 
                                 categoryName === 'Starlink Mini Kit' || 
+                                categoryName === 'Starlink Mini' || 
                                 categoryName === 'Starlink Enterprise Kit' ||
                                 categoryName === 'Starlink Ethernet Adapter' ||
-                                categoryName === 'Satrlink Ethernet Adapter';
+                                categoryName === 'Starlink Ethernet Adapters' ||
+                                categoryName === 'Satrlink Ethernet Adapter' ||
+                                (categoryName.includes('Starlink') && categoryName.includes('Ethernet')) ||
+                                (categoryName.includes('Starlink') && categoryName.includes('Mini')) ||
+                                categoryName.includes('Starlink');
+      
+      // Debug logging
+      console.log('ProductForm - Category name:', categoryName);
+      console.log('ProductForm - Is Starlink category:', isStarlinkCategory);
       
       if (isStarlinkCategory) {
         // For Starlink products, check for any duplicate name (strict uniqueness)
@@ -149,9 +163,14 @@ const ProductForm = ({
       // Check if this is a Starlink category
       const isStarlinkCategory = categoryName === 'Starlink Standard V3' || 
                                 categoryName === 'Starlink Mini Kit' || 
+                                categoryName === 'Starlink Mini' || 
                                 categoryName === 'Starlink Enterprise Kit' ||
                                 categoryName === 'Starlink Ethernet Adapter' ||
-                                categoryName === 'Satrlink Ethernet Adapter';
+                                categoryName === 'Starlink Ethernet Adapters' ||
+                                categoryName === 'Satrlink Ethernet Adapter' ||
+                                (categoryName.includes('Starlink') && categoryName.includes('Ethernet')) ||
+                                (categoryName.includes('Starlink') && categoryName.includes('Mini')) ||
+                                categoryName.includes('Starlink');
       
       if (isStarlinkCategory) {
         // For Starlink products, check for any duplicate name (strict uniqueness)
@@ -310,9 +329,14 @@ const ProductForm = ({
               const categoryName = selectedCategory?.name || '';
               const isStarlinkCategory = categoryName === 'Starlink Standard V3' || 
                                         categoryName === 'Starlink Mini Kit' || 
+                                categoryName === 'Starlink Mini' || 
                                         categoryName === 'Starlink Enterprise Kit' ||
                                         categoryName === 'Starlink Ethernet Adapter' ||
-                                        categoryName === 'Satrlink Ethernet Adapter';
+                                categoryName === 'Starlink Ethernet Adapters' ||
+                                        categoryName === 'Satrlink Ethernet Adapter' ||
+                                (categoryName.includes('Starlink') && categoryName.includes('Ethernet')) ||
+                                (categoryName.includes('Starlink') && categoryName.includes('Mini')) ||
+                                categoryName.includes('Starlink');
               
               if (isStarlinkCategory) {
                 return (

@@ -433,3 +433,33 @@
     grid-template-columns: 1fr;
   }
 }
+
+/* Role-based access styling */
+.role-info {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-top: 8px;
+}
+
+.role-badge {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  padding: 4px 12px;
+  border-radius: 20px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+/* Staff role badge styling */
+.role-badge.staff-badge {
+  background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+}
+
+.role-description {
+  color: #6b7280;
+  font-size: 0.9rem;
+  font-style: italic;
+}

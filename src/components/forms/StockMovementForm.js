@@ -8,11 +8,18 @@ const StockMovementForm = ({
   loading = false, 
   error = null,
   products = [],
-  clients = []
+  clients = [],
+  userRole = 'staff'
 }) => {
+  // Set default movement type based on user role
+  const getDefaultMovementType = () => {
+    const normalizedRole = (userRole || '').toLowerCase();
+    return normalizedRole === 'technician' ? 'SALE' : 'PURCHASE';
+  };
+
   const [formData, setFormData] = useState({
     product: '',
-    movementType: 'PURCHASE',
+    movementType: getDefaultMovementType(),
     quantity: '',
     client: '',
     purchaseDate: '',
@@ -20,6 +27,25 @@ const StockMovementForm = ({
   });
 
   const [formErrors, setFormErrors] = useState({});
+
+  // Determine available movement types based on user role
+  const getAvailableMovementTypes = () => {
+    const normalizedRole = (userRole || '').toLowerCase();
+    
+    switch (normalizedRole) {
+      case 'technician':
+        return [{ value: 'SALE', label: 'Sale (Stock Out)' }];
+      case 'admin':
+      case 'staff':
+      default:
+        return [
+          { value: 'PURCHASE', label: 'Purchase (Stock In)' },
+          { value: 'SALE', label: 'Sale (Stock Out)' }
+        ];
+    }
+  };
+
+  const availableMovementTypes = getAvailableMovementTypes();
 
   // Populate form when editing
   useEffect(() => {
@@ -172,14 +198,14 @@ const StockMovementForm = ({
   };
 
   const handleCancel = () => {
-    setFormData({
-      product: '',
-      movementType: 'PURCHASE',
-      quantity: '',
-      client: '',
-      purchaseDate: '',
-      status: 'YES'
-    });
+      setFormData({
+        product: '',
+        movementType: getDefaultMovementType(),
+        quantity: '',
+        client: '',
+        purchaseDate: '',
+        status: 'YES'
+      });
     setFormErrors({});
     onCancel();
   };
@@ -267,11 +293,22 @@ const StockMovementForm = ({
               className={`form-select ${formErrors.movementType ? 'error' : ''}`}
               disabled={loading}
             >
-              <option value="PURCHASE">Purchase (Stock In)</option>
-              <option value="SALE">Sale (Stock Out)</option>
+              {availableMovementTypes.map(type => (
+                <option key={type.value} value={type.value}>
+                  {type.label}
+                </option>
+              ))}
             </select>
             {formErrors.movementType && (
               <span className="field-error">{formErrors.movementType}</span>
+            )}
+            {userRole?.toLowerCase() === 'technician' && (
+              <div className="form-info">
+                <span className="info-icon">ℹ️</span>
+                <span className="info-text">
+                  As a Technician, you can only create Sale (Stock Out) movements.
+                </span>
+              </div>
             )}
           </div>
 

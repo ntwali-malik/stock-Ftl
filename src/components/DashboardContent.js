@@ -36,7 +36,14 @@ const DashboardContent = ({ activeSection, userRole }) => {
             return <StaffDashboard />;
         }
       case 'products':
-        return <Products />;
+        // Only Admin and Staff can access Products
+        const normalizedUserRole = (userRole || '').toLowerCase();
+        if (normalizedUserRole === 'admin' || normalizedUserRole === 'staff') {
+          return <Products />;
+        } else {
+          // Redirect technicians to dashboard if they try to access products
+          return <TechnicianDashboard />;
+        }
       case 'categories':
         return <Categories />;
       case 'stock':

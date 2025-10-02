@@ -29,51 +29,57 @@ const TechnicianDashboard = () => {
     }
   }, [loading]);
 
+  // Calculate sold out metrics
+  const soldOutItems = stats.categoryStock ? stats.categoryStock.filter(cat => cat.totalQuantity === 0).length : 0;
+  const totalSales = stats.todayMovements || 0; // This could be refined to show actual sales
+  const outOfStockProducts = stats.categoryStock ? 
+    stats.categoryStock.reduce((total, cat) => total + (cat.totalQuantity === 0 ? cat.productCount : 0), 0) : 0;
+
   const dashboardCards = [
     {
+      id: 'sold-out',
+      title: 'Sold Out Categories',
+      value: soldOutItems,
+      icon: '🚫',
+      color: 'red',
+      subtitle: 'Categories completely sold out',
+      trend: `${soldOutItems > 0 ? 'Requires restocking' : 'All categories have stock'}`
+    },
+    {
+      id: 'out-of-stock',
+      title: 'Out of Stock Products',
+      value: outOfStockProducts,
+      icon: '📦',
+      color: 'orange',
+      subtitle: 'Products with zero quantity',
+      trend: `${outOfStockProducts > 0 ? 'Need replenishment' : 'All products in stock'}`
+    },
+    {
       id: 'low-stock',
-      title: 'Critical Stock Alerts',
+      title: 'Low Stock Alerts',
       value: stats.lowStockItems,
       icon: '⚠️',
-      color: 'red',
-      subtitle: 'Items need immediate attention',
-      trend: `${stats.lowStockItems > 0 ? 'Urgent restocking needed' : 'All items in stock'}`
+      color: 'yellow',
+      subtitle: 'Items running low',
+      trend: `${stats.lowStockItems > 0 ? 'Monitor closely' : 'Stock levels healthy'}`
     },
     {
-      id: 'products',
-      title: 'Total Products',
-      value: stats.totalProducts,
-      icon: '📦',
-      color: 'blue',
-      subtitle: 'Products in inventory',
-      trend: `${stats.totalProducts > 0 ? 'Inventory managed' : 'No products yet'}`
-    },
-    {
-      id: 'movements',
-      title: 'Today\'s Movements',
-      value: stats.todayMovements,
-      icon: '📈',
+      id: 'total-sales',
+      title: 'Today\'s Sales',
+      value: totalSales,
+      icon: '📤',
       color: 'purple',
-      subtitle: 'Stock transactions today',
-      trend: `${stats.todayMovements > 0 ? 'Active today' : 'No movements today'}`
+      subtitle: 'Items sold today',
+      trend: `${totalSales > 0 ? 'Active sales day' : 'No sales today'}`
     },
     {
       id: 'categories',
-      title: 'Categories',
+      title: 'Total Categories',
       value: stats.totalCategories,
       icon: '📁',
       color: 'green',
-      subtitle: 'Product categories',
+      subtitle: 'Product categories managed',
       trend: `${stats.totalCategories > 0 ? 'Well organized' : 'No categories yet'}`
-    },
-    {
-      id: 'stock-value',
-      title: 'Stock Value',
-      value: `${stats.totalStockValue.toLocaleString()} RWF`,
-      icon: '💰',
-      color: 'orange',
-      subtitle: 'Total inventory value',
-      trend: `${stats.totalStockValue > 0 ? 'Current value' : 'No stock value'}`
     },
     {
       id: 'system-health',
@@ -100,7 +106,7 @@ const TechnicianDashboard = () => {
       <div className="dashboard-header">
         <div>
           <h1>Technician Dashboard</h1>
-          <p>Monitor system performance and manage inventory operations.</p>
+          <p>Monitor sold out items, stock depletion, and inventory replenishment needs.</p>
         </div>
         <div className="dashboard-actions">
           <button 
@@ -200,28 +206,38 @@ const TechnicianDashboard = () => {
 
         <div className="widget">
           <div className="widget-header">
-            <h3>Stock by Category</h3>
+            <h3>Stock Status by Category</h3>
             <div className="widget-actions">
-              <button className="widget-btn">📊</button>
+              <button className="widget-btn">🚫</button>
             </div>
           </div>
           <div className="widget-content">
             <div className="category-stock-list">
               {stats.categoryStock.length > 0 ? (
                 stats.categoryStock.slice(0, 5).map((category) => (
-                  <div key={category.categoryId} className="category-stock-item">
+                  <div key={category.categoryId} className={`category-stock-item ${category.totalQuantity === 0 ? 'sold-out' : category.totalQuantity <= 5 ? 'low-stock' : ''}`}>
                     <div className="category-info">
-                      <div className="category-name">{category.categoryName}</div>
+                      <div className="category-name">
+                        {category.totalQuantity === 0 && <span className="sold-out-icon">🚫</span>}
+                        {category.categoryName}
+                      </div>
                       <div className="category-details">
                         <span className="product-count">{category.productCount} products</span>
-                        <span className="stock-quantity">
+                        <span className={`stock-quantity ${category.totalQuantity === 0 ? 'zero-stock' : category.totalQuantity <= 5 ? 'low-stock-text' : ''}`}>
                           {category.totalQuantity} {
                             category.categoryName === 'Starlink Standard V3' || 
                             category.categoryName === 'Starlink Mini Kit' || 
-                            category.categoryName === 'Starlink Enterprise Kit' 
+                            category.categoryName === 'Starlink Mini' ||
+                            category.categoryName === 'Starlink Enterprise Kit' ||
+                            (category.categoryName.includes('Starlink') && 
+                             (category.categoryName.includes('Standard') || 
+                              category.categoryName.includes('Mini') || 
+                              category.categoryName.includes('Enterprise')))
                               ? 'Kits' 
                               : category.categoryName === 'Starlink Ethernet Adapter' || 
-                                category.categoryName === 'Satrlink Ethernet Adapter'
+                                category.categoryName === 'Starlink Ethernet Adapters' ||
+                                category.categoryName === 'Satrlink Ethernet Adapter' ||
+                                (category.categoryName.includes('Starlink') && category.categoryName.includes('Ethernet'))
                                 ? 'Box' 
                                 : 'units'
                           }

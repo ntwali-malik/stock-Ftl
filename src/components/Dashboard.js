@@ -81,6 +81,20 @@ const Dashboard = () => {
     }
   };
 
+  // Handle section changes with role-based access control
+  const handleSetActiveSection = (section) => {
+    const userRole = (user?.role || '').toLowerCase();
+    
+    // Prevent technicians from accessing products section
+    if (section === 'products' && userRole === 'technician') {
+      // Redirect technicians to dashboard if they try to access products
+      setActiveSection('dashboard');
+      return;
+    }
+    
+    setActiveSection(section);
+  };
+
   // Close sidebar when clicking outside on mobile
   const handleOverlayClick = () => {
     if (window.innerWidth <= 1024) {
@@ -97,7 +111,7 @@ const Dashboard = () => {
       
       <Sidebar 
         activeSection={activeSection}
-        setActiveSection={setActiveSection}
+        setActiveSection={handleSetActiveSection}
         collapsed={sidebarCollapsed}
         open={sidebarOpen}
         userRole={user.role}

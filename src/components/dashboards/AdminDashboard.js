@@ -281,10 +281,17 @@ const AdminDashboard = () => {
                           {category.totalQuantity} {
                             category.categoryName === 'Starlink Standard V3' || 
                             category.categoryName === 'Starlink Mini Kit' || 
-                            category.categoryName === 'Starlink Enterprise Kit' 
+                            category.categoryName === 'Starlink Mini' ||
+                            category.categoryName === 'Starlink Enterprise Kit' ||
+                            (category.categoryName.includes('Starlink') && 
+                             (category.categoryName.includes('Standard') || 
+                              category.categoryName.includes('Mini') || 
+                              category.categoryName.includes('Enterprise')))
                               ? 'Kits' 
                               : category.categoryName === 'Starlink Ethernet Adapter' || 
-                                category.categoryName === 'Satrlink Ethernet Adapter'
+                                category.categoryName === 'Starlink Ethernet Adapters' ||
+                                category.categoryName === 'Satrlink Ethernet Adapter' ||
+                                (category.categoryName.includes('Starlink') && category.categoryName.includes('Ethernet'))
                                 ? 'Box' 
                                 : 'units'
                           }

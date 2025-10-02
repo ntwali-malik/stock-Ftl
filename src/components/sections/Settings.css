@@ -322,3 +322,30 @@
     border-bottom-color: #3b82f6;
   }
 }
+
+/* User Management Panel */
+.user-management-panel {
+  padding: 0 !important;
+  background: transparent !important;
+  border: none !important;
+  box-shadow: none !important;
+}
+
+.user-management-panel .user-management {
+  padding: 0;
+  margin: 0;
+}
+
+.user-management-panel .section-header {
+  margin-bottom: 1.5rem;
+  padding-bottom: 0.75rem;
+}
+
+.user-management-panel .section-header .header-content h1 {
+  font-size: 1.5rem;
+  margin-bottom: 0.25rem;
+}
+
+.user-management-panel .section-header .header-content p {
+  font-size: 0.9rem;
+}
